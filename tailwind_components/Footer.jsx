@@ -1,5 +1,3 @@
-import { connect } from 'react-redux'
-
 const navigation = {
     solutions: [
       { name: 'Marketing', href: '#' },
@@ -28,7 +26,7 @@ const navigation = {
     social: [
       {
         name: 'Facebook',
-        href: 'https://www.facebook.com/profile.php?id=100010244201019',
+        href: '#',
         icon: (props) => (
           <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
             <path
@@ -41,7 +39,7 @@ const navigation = {
       },
       {
         name: 'Instagram',
-        href: 'https://www.instagram.com/benjaminbenitezzc/',
+        href: '#',
         icon: (props) => (
           <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
             <path
@@ -89,10 +87,10 @@ const navigation = {
       },
     ],
   }
-
-function Footer() {
-    return(
-        <footer className="bg-white" aria-labelledby="footer-heading">
+  
+  export default function Example() {
+    return (
+      <footer className="bg-white" aria-labelledby="footer-heading">
         <h2 id="footer-heading" className="sr-only">
           Footer
         </h2>
@@ -109,7 +107,7 @@ function Footer() {
               </p>
               <div className="flex space-x-6">
                 {navigation.social.map((item) => (
-                  <a key={item.name} href={item.href} target="_blank" className="text-gray-400 hover:text-gray-500">
+                  <a key={item.name} href={item.href} className="text-gray-400 hover:text-gray-500">
                     <span className="sr-only">{item.name}</span>
                     <item.icon className="h-6 w-6" aria-hidden="true" />
                   </a>
@@ -176,11 +174,6 @@ function Footer() {
           </div>
         </div>
       </footer>
-    )    
-}
-
-const mapStateToProps = () => ({ });
+    )
+  }
   
-
-export default connect(mapStateToProps,{
- })( Footer);

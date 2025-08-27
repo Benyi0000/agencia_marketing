@@ -6,7 +6,10 @@ function Home() {
     return(
         <Layout>
             <Navbar />
-            Home
+            <div className="pt-28 min-h-screen">
+                home
+
+            </div>
             <Footer />
         </Layout>
     )

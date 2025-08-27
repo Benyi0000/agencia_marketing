@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from  'react-router-dom'
 function App() {
   return (
     <Provider store={store}>
-    <Router basename={import.meta.env.BASE_URL}>
+    <Router>
       <Routes>
         <Route path='*' element={<Error404/>}/>
         <Route path ='/' element={<Home/>}/>
