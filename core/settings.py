@@ -1,32 +1,17 @@
-from pathlib import Path
 import os
-import environ 
+import environ
 
 env = environ.Env()
 environ.Env.read_env()
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
-
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS_DEV')
 
-
-# Application definition
-
-
-
-FRONTEND_DIST = BASE_DIR / "dist"
-
+# ---- Apps ----
 DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,22 +19,17 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
 ]
-
-PROJECT_APPS = [
-
-]
-
+PROJECT_APPS = []
 THIRD_PARTY_APPS = [
     'corsheaders',
     'rest_framework',
     'ckeditor',
     'ckeditor_uploader',
 ]
-
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
+# ---- CKEditor ----
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -62,12 +42,13 @@ CKEDITOR_CONFIGS = {
         'autoParagraph': False,
     }
 }
-
 CKEDITOR_UPLOAD_PATH = "media/"
 
+# ---- Middleware ----
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- si quieres servir estáticos sin Nginx
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,12 +59,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-
+# ---- Frontend (dist) ----
+FRONTEND_DIST = os.path.join(BASE_DIR, "dist")
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [FRONTEND_DIST],
+        'DIRS': [FRONTEND_DIST],   # Django va a servir dist/index.html
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -97,76 +79,60 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# ---- Database ----
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# ---- Password validation ----
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# ---- Internacionalización ----
 LANGUAGE_CODE = 'es'
 TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# ---- Static & Media ----
+STATIC_URL = '/static/'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# destino de collectstatic → separado de tu carpeta frontend
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = 'static/'
+# Django debe encontrar los assets que Vite genera en dist/assets
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'dist') ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
-STATICFILES_DIRS = [FRONTEND_DIST / "assets"]
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.IsAuthenticatedOrReadOnly', 
-]}
+# ---- DRF ----
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ]
+}
 
-CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST_DEV')
+# ---- CORS / CSRF ----
+CORS_ALLOWED_ORIGINS = env.list('CORS_ORIGIN_WHITELIST_DEV')
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS_DEV')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
+# ---- Ajustes de producción ----
 if not DEBUG:
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS_DEPLOY')
-    CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST_DEPLOY')
+    CORS_ALLOWED_ORIGINS = env.list('CORS_ORIGIN_WHITELIST_DEPLOY')
     CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS_DEPLOY')
 
     DATABASES = {
