@@ -96,7 +96,7 @@ function Footer() {
         <h2 id="footer-heading" className="sr-only">
           Footer
         </h2>
-        <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+        <div className="mx-auto max-w-full py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8 xl:col-span-1">
               <img
@@ -182,5 +182,5 @@ function Footer() {
 const mapStateToProps = () => ({ });
   
 
-export default connect(mapStateToProps,{
- })( Footer);
+  export default connect(mapStateToProps,{
+  })( Footer);

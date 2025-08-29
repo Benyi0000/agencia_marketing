@@ -8,7 +8,6 @@ function Home() {
             <Navbar />
             <div className="pt-28 min-h-screen">
                 home
-
             </div>
             <Footer />
         </Layout>
