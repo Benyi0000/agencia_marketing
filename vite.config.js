@@ -17,5 +17,5 @@ export default defineConfig(({ mode }) => ({
         emptyOutDir: true,
     },
     // En dev sirve en "/", en build genera rutas hacia "/static/"
-    base: mode === "development" ? "/" : "/static/",
+    base: mode === "development" ? "./" : "/static/",
 }))
