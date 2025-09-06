@@ -1,18 +1,17 @@
 
-// Un "root reducer" válido
 import { combineReducers } from "redux";
+import authReducer from "./auth";
 
-// Crea aunque sea un reducer de relleno
 function appReducer(state = { ready: true }, action) {
   switch (action.type) {
     default:
-      return state; // ¡siempre devuelve el estado por defecto!
+      return state;
   }
 }
 
 const rootReducer = combineReducers({
-  app: appReducer,   // <- el valor debe ser una función reducer
-  // aquí irán otros reducers: auth, cart, etc.
+  app: appReducer,
+  auth: authReducer,
 });
 
 export default rootReducer;
