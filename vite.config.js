@@ -3,8 +3,7 @@ import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 
-// ✅ devolvemos una función para tener { mode }
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
     plugins: [react(), tailwindcss()],
     server: {
         port: 5173,
@@ -16,6 +15,5 @@ export default defineConfig(({ mode }) => ({
         manifest: true,
         emptyOutDir: true,
     },
-    // En dev sirve en "/", en build genera rutas hacia "/static/"
-    base: mode === "development" ? "./" : "/static/",
-}))
+  base: "./",   // 👈 esta es la clave
+})
